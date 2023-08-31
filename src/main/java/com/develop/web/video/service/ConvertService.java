@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class Convert {
+public class ConvertService {
     private final VideoFileUtils videoFileUtils;
     private final IngestMapper ingestMapper;
     private final MediaDataFetcher mediaDataFetcher;

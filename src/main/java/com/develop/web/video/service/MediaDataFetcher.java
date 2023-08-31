@@ -26,9 +26,7 @@ public class MediaDataFetcher {
      * @return metadata (json)
      * */
     public Metadata getMediaInfo(FFprobe ffprobe, String filePath, FileDto fileDto) throws IOException {
-        System.out.println("파일 : " + filePath);
         FFmpegProbeResult probeResult = ffprobe.probe(filePath);
-
         Metadata metadata = new Metadata();
 
         metadata.clip_uuid = fileDto.uuid;

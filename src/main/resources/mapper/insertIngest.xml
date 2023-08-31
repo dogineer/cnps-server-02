@@ -6,6 +6,6 @@
 <mapper namespace="com.develop.web.video.mapper.IngestMapper">
 
     <update id="insertIngestSuccessRequest" parameterType="Integer">
-        UPDATE ingest SET success = NOW() WHERE id = #{id}
+        UPDATE ingest SET success = NOW() WHERE id = #{ingestId}
     </update>
 </mapper>
