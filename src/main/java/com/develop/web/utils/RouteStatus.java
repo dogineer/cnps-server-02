@@ -11,8 +11,8 @@ public class RouteStatus {
 
         File dir = new File(uploadDir);
 
-        if(!dir.exists()) {
-          throw new NullPointerException("해당 경로에 폴더가 존재하지 않습니다.");
+        if (!dir.exists()) {
+            throw new NullPointerException("[!] 해당 경로에 폴더가 존재하지 않습니다." + uploadDir);
         }
     }
 }
