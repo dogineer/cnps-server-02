@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class Metadata {
+    public Integer id;
     public String clip_uuid;
     public String file_path;
     public String filename;
@@ -17,8 +18,7 @@ public class Metadata {
     public Long size;
 
     public String toString(){
-        return "\n[ Metadata ]\n" +
-                "clip_uuid = " + clip_uuid + "\n" +
+        return  "clip_uuid = " + clip_uuid + "\n" +
                 "file_path = " + file_path + "\n" +
                 "filename = " + filename + "\n" +
                 "ext = " + ext + "\n" +

@@ -3,9 +3,9 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.develop.web.video.mapper.IngestMapper">
+<mapper namespace="com.develop.web.video.mapper.VideoMapper">
 
-    <update id="insertIngestSuccessRequest" parameterType="Integer">
+    <update id="insertIngestSuccessId" parameterType="Integer">
         UPDATE ingest SET success = NOW() WHERE id = #{ingestId}
     </update>
 </mapper>

@@ -1,18 +1,15 @@
 package com.develop.web.video.controller;
 
-import com.develop.web.utils.VideoFileUtils;
-import com.develop.web.video.dto.FileDto;
-import com.develop.web.video.dto.FolderDto;
+import com.develop.web.video.dto.*;
 import com.develop.web.video.service.*;
-import com.develop.web.video.dto.Metadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -20,42 +17,45 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class VideoController {
 
-  private final FolderDto folder;
-  private final VideoFileUtils videoFileUtils;
-  private final FetcherFileExt fetcherFileExt;
-  private final UploadFile uploadFile;
-  private final MediaDataFetcher mediaDataFetcher;
-  private final ConvertService convertService;
-  private final ThumbnailService thumbnailService;
+    private final ArchiveClipDBAddService archiveClipDBAddService;
+    private final ConvertClipDBAddService convertClipDBAddService;
+    private final ClipDBAddService clipDBAddService;
 
-  @PostMapping(value = "/upload")
-  public ResponseEntity<Metadata> upload(
-    @RequestParam(value = "files", required = false)MultipartFile file,
-    @RequestParam(value = "ingestId", required = false)Integer ingestId) throws IOException {
+    private final ConvertService convertService;
+    private final ThumbnailService thumbnailService;
 
-    String fileOriginalFilename = file.getOriginalFilename();
-    assert fileOriginalFilename != null;
+    private final MediaService mediaService;
 
-    String extractExt = fetcherFileExt.extractExt(fileOriginalFilename);
-    String uuid = UUID.randomUUID().toString();
+    @Transactional
+    @PostMapping(value = "/upload")
+    public void upload(
+        @RequestPart(value = "files", required = false) MultipartFile files,
+        @RequestPart(value = "ingestId", required = false) Integer ingestId,
+        @RequestPart(value = "teamId", required = false) Integer teamId,
+        @RequestPart(value = "folderId", required = false) Integer folderId,
+        @RequestPart(value = "ingestAt", required = false) LocalDateTime ingestAt) throws IOException {
 
-    FileDto fileDto = new FileDto();
-    fileDto.uuid = uuid;
-    fileDto.originalFileName = fileOriginalFilename;
-    fileDto.ext = extractExt;
+        String fileOriginalFilename = files.getOriginalFilename();
+        assert fileOriginalFilename != null;
 
-    String archiveSourceName = uploadFile.copyFile(file, fileOriginalFilename, folder.archiveDirDate);
-    String resultArchivePath = folder.archiveDirDate + "/" + archiveSourceName;
-    Metadata archiveResultMetadata = mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, resultArchivePath, fileDto);
-    log.info("\n[!] ▼ ArchiveResponseEntity ▼\n" + archiveResultMetadata.toString());
+        FileDto fileDto = new FileDto(fileOriginalFilename);
 
-    String filenameUUID = uuid + "." + extractExt;
-    String convertSourceName = uploadFile.copyFile(file, filenameUUID, folder.convertingTempDirDate);
-    String convertingSourcePath = folder.convertDirDate + "/" + convertSourceName;
-    Metadata convertResultMetadata = convertService.transcoding(ingestId, resultArchivePath, convertingSourcePath, fileDto);
-    thumbnailService.markThumbnail(convertResultMetadata);
-    log.info("\n[!] ▼ ConvertResponseEntity ▼\n" + convertResultMetadata.toString());
+        Metadata archiveCopyMetadata = mediaService.archiveFileAndFetchMetadata(files, fileOriginalFilename, fileDto);
+        archiveClipDBAddService.addArchiveClipMetadata(archiveCopyMetadata);
 
-    return ResponseEntity.ok().body(convertResultMetadata);
-  }
+        String resultArchivePath = archiveCopyMetadata.file_path;
+        String convertingSourcePath = mediaService.getFilePathToConvert(files, fileDto);
+        Metadata convertResultMetadata = convertService.transcoding(ingestId, resultArchivePath, convertingSourcePath, fileDto);
+
+        thumbnailService.markThumbnail(convertResultMetadata);
+        convertClipDBAddService.addConvertClipMetadata(convertResultMetadata);
+        log.info("\n[!] ▼ ConvertResponseEntity ▼\n" + convertResultMetadata.toString());
+
+        Integer archiveMedataId = archiveCopyMetadata.id;
+        Integer convertMedataId = convertResultMetadata.id;
+        ResultConvertMetadata resultConvertMetadata = new ResultConvertMetadata(ingestId, teamId, folderId, archiveMedataId, convertMedataId, ingestAt, LocalDateTime.now());
+        log.info("\n[!] ▼ ResultResponseEntity ▼\n" + resultConvertMetadata.toString());
+
+        clipDBAddService.addClipPost(resultConvertMetadata);
+    }
 }

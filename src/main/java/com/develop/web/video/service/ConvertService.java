@@ -3,7 +3,7 @@ package com.develop.web.video.service;
 import com.develop.web.video.dto.FileDto;
 import com.develop.web.video.dto.Metadata;
 import com.develop.web.video.dto.SendMessageDto;
-import com.develop.web.video.mapper.IngestMapper;
+import com.develop.web.video.mapper.VideoMapper;
 import com.develop.web.websocket.MyWebSocketClient;
 import com.develop.web.utils.VideoFileUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +21,22 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class ConvertService {
     private final VideoFileUtils videoFileUtils;
-    private final IngestMapper ingestMapper;
+    private final VideoMapper videoMapper;
     private final MediaDataFetcher mediaDataFetcher;
 
     public Metadata transcoding(Integer ingestId, String filePath, String outputPath, FileDto fileDto) throws IOException {
         log.info("[!] 인제스트: '" + ingestId + "'의 변환이 시작되었습니다. \n" + "inputPath : " + filePath + "\noutputPath : " + outputPath);
         long bitrate = 220_000_000L;
+        int cores = Runtime.getRuntime().availableProcessors();
 
         FFmpegBuilder builder = new FFmpegBuilder()
             .setInput(filePath)
             .overrideOutputFiles(true)
             .addOutput(outputPath)
             .disableSubtitle()
+            .setConstantRateFactor(18)
+            .setAudioQuality(6)
+            .addExtraArgs("-threads", String.valueOf((int)Math.floor(cores * 0.7)))
             .setVideoCodec("libx264")
             .setVideoResolution(1280, 720)
             .setVideoBitRate(bitrate)
@@ -63,19 +67,14 @@ public class ConvertService {
                 }
             }).run();
 
-            ingestMapper.insertIngestSuccessRequest(ingestId);
+            videoMapper.insertIngestSuccessId(ingestId);
             SendMessageDto sendMessageDto = new SendMessageDto();
             sendMessageDto.setIngestId(String.valueOf(ingestId));
             sendMessageDto.setPercentage("완료");
 
             try {
                 MyWebSocketClient.sendMessageToAll(sendMessageDto);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            log.info("[!] 인제스트를 마쳤습니다. 성공일을 등록합니다. => ingestId:" + ingestId);
-
-            try {
+                log.info("[!] 인제스트를 마쳤습니다. 성공 날짜를 등록합니다. => ingestId:" + ingestId);
                 return mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, outputPath, fileDto);
             } catch (IOException e) {
                 throw new RuntimeException(e);
