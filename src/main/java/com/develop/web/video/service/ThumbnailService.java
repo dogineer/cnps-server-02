@@ -31,6 +31,6 @@ public class ThumbnailService {
         FFmpegExecutor executor = new FFmpegExecutor(videoFileUtils.ffmpeg, videoFileUtils.ffprobe);
         executor.createJob(builder).run();
 
-        log.info("[!] " + convertResultMetadata.filename + " 썸네일을 생성하였습니다. ");
+        log.info("[!] " + convertResultMetadata.file_name + " 썸네일을 생성하였습니다. ");
     }
 }

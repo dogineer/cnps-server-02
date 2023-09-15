@@ -31,15 +31,15 @@ public class MediaDataFetcher {
 
         metadata.clip_uuid = fileDto.uuid;
         metadata.file_path = filePath;
-        metadata.filename = fileDto.originalFileName;
-        metadata.ext = fileDto.ext;
+        metadata.file_name = fileDto.originalFileName;
+        metadata.file_ext = fileDto.ext;
         metadata.width = probeResult.getStreams().get(0).width;
         metadata.height = probeResult.getStreams().get(0).height;
         metadata.format_name = probeResult.getFormat().format_name;
         metadata.format_long_name = probeResult.getFormat().format_long_name;
         metadata.tags = probeResult.getFormat().tags.toString();
-        metadata.duration = probeResult.getFormat().duration;
-        metadata.size = probeResult.getFormat().size;
+        metadata.file_duration = probeResult.getFormat().duration;
+        metadata.file_size = probeResult.getFormat().size;
 
         return metadata;
     }

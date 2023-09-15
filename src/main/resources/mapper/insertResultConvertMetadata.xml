@@ -18,16 +18,16 @@
         clip_uuid,
         file_path,
         file_name,
-        ext,
+        file_ext,
         width,
         height,
         format_name,
         format_long_name,
         tags,
-        duration,
-        size)
-        VALUES (#{clip_uuid},#{file_path}, #{filename}, #{ext},#{width}, #{height}, #{format_name}, #{format_long_name},
-        #{tags}, #{duration}, #{size})
+        file_duration,
+        file_size)
+        VALUES (#{clip_uuid},#{file_path}, #{file_name}, #{file_ext},#{width}, #{height}, #{format_name}, #{format_long_name},
+        #{tags}, #{file_duration}, #{file_size})
         <selectKey resultType="Int" keyProperty="id" keyColumn="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -39,16 +39,16 @@
         clip_uuid,
         file_path,
         file_name,
-        ext,
+        file_ext,
         width,
         height,
         format_name,
         format_long_name,
         tags,
-        duration,
-        size)
-        VALUES (#{clip_uuid},#{file_path}, #{filename}, #{ext},#{width}, #{height}, #{format_name}, #{format_long_name},
-        #{tags}, #{duration}, #{size})
+        file_duration,
+        file_size)
+        VALUES (#{clip_uuid},#{file_path}, #{file_name}, #{file_ext},#{width}, #{height}, #{format_name}, #{format_long_name},
+        #{tags}, #{file_duration}, #{file_size})
         <selectKey resultType="Int" keyProperty="id" keyColumn="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
