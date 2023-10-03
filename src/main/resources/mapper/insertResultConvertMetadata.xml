@@ -7,8 +7,8 @@
 
     <select id="insertClipSuccessResponse" resultType="ResultConvertMetadata">
         INSERT
-        INTO clip(ingest_id, team_id, folder_id, archive_metadata_id, ingest_at, end_at, convert_metadata_id)
-        VALUES (#{ingest_id}, #{team_id}, #{folder_id}, #{archive_metadata_id}, #{ingest_at}, #{end_at},
+        INTO clip(ingest_id, program_id, folder_id, archive_metadata_id, ingest_at, end_at, convert_metadata_id)
+        VALUES (#{ingest_id}, #{program_id}, #{folder_id}, #{archive_metadata_id}, #{ingest_at}, #{end_at},
                 #{convert_metadata_id})
     </select>
 

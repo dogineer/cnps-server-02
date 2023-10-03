@@ -10,7 +10,7 @@ public class IngestRequestData {
     private LocalDateTime createAt;     // 생성 날짜
     private Integer memberId;           // 멤버 ID
     private String title;               // 제목
-    private Integer teamId;             // 팀 아이디
+    private Integer programId;          // 프로그램 아이디
     private String program;             // 프로그램명 (팀명)
     private Integer folder;             // 폴더
     private String name;                // 요청자

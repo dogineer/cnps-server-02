@@ -31,7 +31,7 @@ public class VideoController {
     public void upload(
         @RequestPart(value = "files", required = false) MultipartFile files,
         @RequestPart(value = "ingestId", required = false) Integer ingestId,
-        @RequestPart(value = "teamId", required = false) Integer teamId,
+        @RequestPart(value = "programId", required = false) Integer programId,
         @RequestPart(value = "folderId", required = false) Integer folderId,
         @RequestPart(value = "ingestAt", required = false) LocalDateTime ingestAt) throws IOException {
 
@@ -53,7 +53,7 @@ public class VideoController {
 
         Integer archiveMedataId = archiveCopyMetadata.id;
         Integer convertMedataId = convertResultMetadata.id;
-        ResultConvertMetadata resultConvertMetadata = new ResultConvertMetadata(ingestId, teamId, folderId, archiveMedataId, convertMedataId, ingestAt, LocalDateTime.now());
+        ResultConvertMetadata resultConvertMetadata = new ResultConvertMetadata(ingestId, programId, folderId, archiveMedataId, convertMedataId, ingestAt, LocalDateTime.now());
         log.info("\n[!] ▼ ResultResponseEntity ▼\n" + resultConvertMetadata.toString());
 
         clipDBAddService.addClipPost(resultConvertMetadata);

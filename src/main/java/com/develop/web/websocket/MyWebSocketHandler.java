@@ -18,7 +18,6 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("웹 소켓 연결이 열렸습니다. : " + session);
         webSocketClient.addSession(session);
     }
 
@@ -29,7 +28,6 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        System.out.println("웹 소켓 연결이 닫혔습니다.");
         webSocketClient.removeSession(session);
     }
 }
