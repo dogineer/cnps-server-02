@@ -36,7 +36,7 @@ public class ConvertService {
             .disableSubtitle()
             .setConstantRateFactor(18)
             .setAudioQuality(6)
-            .addExtraArgs("-threads", String.valueOf((int)Math.floor(cores * 0.7)))
+            .addExtraArgs("-threads", String.valueOf((int) Math.floor(cores * 0.7)))
             .setVideoCodec("libx264")
             .setVideoResolution(1280, 720)
             .setVideoBitRate(bitrate)
@@ -60,8 +60,7 @@ public class ConvertService {
                     sendMessageDto.setPercentage(sendPercentage);
 
                     MyWebSocketClient.sendMessageToAll(sendMessageDto);
-                    log.info("[!] 클립을 변환하고 있습니다. => 요청: " + ingestId + ", 퍼센트: " + percentage);
-
+                    updateConsolePercentage(ingestId, percentage);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -74,12 +73,12 @@ public class ConvertService {
 
             try {
                 MyWebSocketClient.sendMessageToAll(sendMessageDto);
+                System.out.println();
                 log.info("[!] 인제스트를 마쳤습니다. 성공 날짜를 등록합니다. => ingestId:" + ingestId);
                 return mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, outputPath, fileDto);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         });
 
         completableFuture.thenApply((Void) -> {
@@ -95,5 +94,23 @@ public class ConvertService {
         });
 
         return completableFuture.join();
+    }
+
+    protected synchronized void updateConsolePercentage(Integer ingestId, double percentage) {
+        double width = 50.0;
+        double interval = 1.0;
+
+        System.out.print("\r[!] 인제스트["+ ingestId +"] 클립을 변환하고 있습니다. Progress: [");
+
+        for (int i = 0; i < width; i++) {
+            if (i < percentage / interval * (width / 100.0)) {
+                System.out.print("█");
+            } else {
+                System.out.print("░");
+            }
+        }
+
+        System.out.print("] " + String.format("%.2f", percentage) + "%");
+        System.out.flush();
     }
 }
