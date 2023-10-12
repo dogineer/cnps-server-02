@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/s2/api")
 public class VideoController {
 
     private final ArchiveClipDBAddService archiveClipDBAddService;
