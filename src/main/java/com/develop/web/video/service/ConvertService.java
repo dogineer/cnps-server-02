@@ -24,7 +24,7 @@ public class ConvertService {
     private final VideoMapper videoMapper;
     private final MediaDataFetcher mediaDataFetcher;
 
-    public Metadata transcoding(Integer ingestId, String filePath, String outputPath, FileDto fileDto) throws IOException {
+    public Metadata transcoding(Integer memberId, Integer ingestId, String filePath, String outputPath, FileDto fileDto) throws IOException {
         log.info("[!] 인제스트: '" + ingestId + "'의 변환이 시작되었습니다. \n" + "inputPath : " + filePath + "\noutputPath : " + outputPath);
         long bitrate = 220_000_000L;
         int cores = Runtime.getRuntime().availableProcessors();
@@ -74,6 +74,9 @@ public class ConvertService {
             try {
                 MyWebSocketClient.sendMessageToAll(sendMessageDto);
                 System.out.println();
+
+                MyWebSocketClient.sendMessageToUser(memberId, "현재 등록한 인제스트 작업이 완료됐습니다.");
+
                 log.info("[!] 인제스트를 마쳤습니다. 성공 날짜를 등록합니다. => ingestId:" + ingestId);
                 return mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, outputPath, fileDto);
             } catch (IOException e) {
@@ -100,7 +103,7 @@ public class ConvertService {
         double width = 50.0;
         double interval = 1.0;
 
-        System.out.print("\r[!] 인제스트["+ ingestId +"] 클립을 변환하고 있습니다. Progress: [");
+        System.out.print("\r[!] 인제스트[" + ingestId + "] 클립을 변환하고 있습니다. Progress: [");
 
         for (int i = 0; i < width; i++) {
             if (i < percentage / interval * (width / 100.0)) {

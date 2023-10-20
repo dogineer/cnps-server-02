@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class VideoController {
     @PostMapping(value = "/upload")
     public void upload(
         @RequestPart(value = "files", required = false) MultipartFile files,
+        @RequestPart(value = "memberId", required = false) Integer memberId,
         @RequestPart(value = "ingestId", required = false) Integer ingestId,
         @RequestPart(value = "programId", required = false) Integer programId,
         @RequestPart(value = "folderId", required = false) Integer folderId,
@@ -45,7 +47,7 @@ public class VideoController {
 
         String resultArchivePath = archiveCopyMetadata.file_path;
         String convertingSourcePath = mediaService.getFilePathToConvert(files, fileDto);
-        Metadata convertResultMetadata = convertService.transcoding(ingestId, resultArchivePath, convertingSourcePath, fileDto);
+        Metadata convertResultMetadata = convertService.transcoding(memberId, ingestId, resultArchivePath, convertingSourcePath, fileDto);
 
         thumbnailService.markThumbnail(convertResultMetadata);
         convertClipDBAddService.addConvertClipMetadata(convertResultMetadata);

@@ -1,5 +1,6 @@
 package com.develop.web.websocket;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -8,6 +9,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 @Component
+@Slf4j
 public class MyWebSocketHandler extends AbstractWebSocketHandler {
     private final MyWebSocketClient webSocketClient;
 
@@ -17,13 +19,10 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        webSocketClient.addSession(session);
-    }
-
-    @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        System.out.println("받은 메시지: " + message.getPayload());
+        webSocketClient.setSessionUserId(session, Integer.valueOf(message.getPayload()));
+        log.info(webSocketClient.getCurrentUsers());
+        log.info("[Socket Join] 사용자 ID(UK): " + message.getPayload() + ", " + session.getId());
     }
 
     @Override
