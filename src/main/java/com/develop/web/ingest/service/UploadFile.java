@@ -1,4 +1,4 @@
-package com.develop.web.video.service;
+package com.develop.web.ingest.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

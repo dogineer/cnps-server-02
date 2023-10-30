@@ -1,7 +1,7 @@
-package com.develop.web.video.mapper;
+package com.develop.web.ingest.mapper;
 
-import com.develop.web.video.dto.Metadata;
-import com.develop.web.video.dto.ResultConvertMetadata;
+import com.develop.web.ingest.dto.Metadata;
+import com.develop.web.ingest.dto.ResultConvertMetadata;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

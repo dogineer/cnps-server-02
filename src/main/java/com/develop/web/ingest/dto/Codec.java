@@ -1,4 +1,4 @@
-package com.develop.web.video.dto;
+package com.develop.web.ingest.dto;
 
 public enum Codec {
 

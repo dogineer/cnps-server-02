@@ -1,6 +1,6 @@
-package com.develop.web.video.dto;
+package com.develop.web.ingest.dto;
 
-import com.develop.web.video.service.FileExtensionExtractor;
+import com.develop.web.ingest.service.FileExtensionExtractor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

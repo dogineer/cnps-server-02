@@ -1,6 +1,6 @@
 package com.develop.web.websocket;
 
-import com.develop.web.video.dto.SendMessageDto;
+import com.develop.web.ingest.dto.SendMessageDto;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

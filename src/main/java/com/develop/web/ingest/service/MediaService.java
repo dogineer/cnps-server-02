@@ -1,9 +1,9 @@
-package com.develop.web.video.service;
+package com.develop.web.ingest.service;
 
 import com.develop.web.utils.VideoFileUtils;
-import com.develop.web.video.dto.FileDto;
-import com.develop.web.video.dto.FolderDto;
-import com.develop.web.video.dto.Metadata;
+import com.develop.web.ingest.dto.FileDto;
+import com.develop.web.ingest.dto.FolderDto;
+import com.develop.web.ingest.dto.Metadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,8 @@ public class MediaService {
 
         String archiveSourceName = uploadFile.copyFile(files, fileOriginalFilename, folder.archiveDirDate);
         String resultArchivePath = folder.archiveDirDate + "/" + archiveSourceName;
-        Metadata archiveResultMetadata = mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, resultArchivePath, fileDto);
-        log.info("\n[!] ▼ ArchiveResponseEntity ▼\n" + archiveResultMetadata.toString());
 
-        return archiveResultMetadata;
+        return mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, resultArchivePath, fileDto);
     }
 
     public String getFilePathToConvert(MultipartFile files, FileDto fileDto) {

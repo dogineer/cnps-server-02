@@ -1,8 +1,8 @@
-package com.develop.web.video.service;
+package com.develop.web.ingest.service;
 
 import com.develop.web.utils.VideoFileUtils;
-import com.develop.web.video.dto.FolderDto;
-import com.develop.web.video.dto.Metadata;
+import com.develop.web.ingest.dto.FolderDto;
+import com.develop.web.ingest.dto.Metadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpegExecutor;

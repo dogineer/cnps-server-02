@@ -1,7 +1,7 @@
-package com.develop.web.video.service;
+package com.develop.web.ingest.service;
 
-import com.develop.web.video.dto.FileDto;
-import com.develop.web.video.dto.Metadata;
+import com.develop.web.ingest.dto.FileDto;
+import com.develop.web.ingest.dto.Metadata;
 import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.springframework.stereotype.Service;

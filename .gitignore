@@ -1,5 +1,5 @@
 HELP.md
-/src/main/**/video/test.java
+/src/main/**/ingest/test.java
 .DS_Store
 .gradle
 build/

@@ -1,6 +1,6 @@
 package com.develop.web.global.config;
 
-import com.develop.web.video.dto.FolderDto;
+import com.develop.web.ingest.dto.FolderDto;
 import com.develop.web.utils.MakeFolderSetup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

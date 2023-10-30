@@ -1,9 +1,9 @@
-package com.develop.web.video.service;
+package com.develop.web.ingest.service;
 
-import com.develop.web.video.dto.FileDto;
-import com.develop.web.video.dto.Metadata;
-import com.develop.web.video.dto.SendMessageDto;
-import com.develop.web.video.mapper.VideoMapper;
+import com.develop.web.ingest.dto.FileDto;
+import com.develop.web.ingest.dto.Metadata;
+import com.develop.web.ingest.dto.SendMessageDto;
+import com.develop.web.ingest.mapper.VideoMapper;
 import com.develop.web.websocket.MyWebSocketClient;
 import com.develop.web.utils.VideoFileUtils;
 import lombok.RequiredArgsConstructor;

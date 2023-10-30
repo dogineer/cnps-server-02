@@ -1,13 +1,12 @@
-package com.develop.web.video.controller;
+package com.develop.web.ingest.controller;
 
-import com.develop.web.video.dto.*;
-import com.develop.web.video.service.*;
+import com.develop.web.ingest.dto.*;
+import com.develop.web.ingest.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -16,19 +15,15 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequestMapping("/s2/api")
-public class VideoController {
+public class IngestController {
 
-    private final ArchiveClipDBAddService archiveClipDBAddService;
-    private final ConvertClipDBAddService convertClipDBAddService;
     private final ClipDBAddService clipDBAddService;
-
     private final ConvertService convertService;
     private final ThumbnailService thumbnailService;
-
     private final MediaService mediaService;
 
     @Transactional
-    @PostMapping(value = "/upload")
+    @PostMapping(value = "/ingest")
     public void upload(
         @RequestPart(value = "files", required = false) MultipartFile files,
         @RequestPart(value = "memberId", required = false) Integer memberId,
@@ -43,21 +38,19 @@ public class VideoController {
         FileDto fileDto = new FileDto(fileOriginalFilename);
 
         Metadata archiveCopyMetadata = mediaService.archiveFileAndFetchMetadata(files, fileOriginalFilename, fileDto);
-        archiveClipDBAddService.addArchiveClipMetadata(archiveCopyMetadata);
+        clipDBAddService.addArchiveClipMetadata(archiveCopyMetadata);
 
         String resultArchivePath = archiveCopyMetadata.file_path;
         String convertingSourcePath = mediaService.getFilePathToConvert(files, fileDto);
         Metadata convertResultMetadata = convertService.transcoding(memberId, ingestId, resultArchivePath, convertingSourcePath, fileDto);
 
         thumbnailService.markThumbnail(convertResultMetadata);
-        convertClipDBAddService.addConvertClipMetadata(convertResultMetadata);
-        log.info("\n[!] ▼ ConvertResponseEntity ▼\n" + convertResultMetadata.toString());
+        clipDBAddService.addConvertClipMetadata(convertResultMetadata);
 
         Integer archiveMedataId = archiveCopyMetadata.id;
         Integer convertMedataId = convertResultMetadata.id;
         ResultConvertMetadata resultConvertMetadata = new ResultConvertMetadata(ingestId, programId, folderId, archiveMedataId, convertMedataId, ingestAt, LocalDateTime.now());
-        log.info("\n[!] ▼ ResultResponseEntity ▼\n" + resultConvertMetadata.toString());
 
-        clipDBAddService.addClipPost(resultConvertMetadata);
+        clipDBAddService.addResultClipId(resultConvertMetadata);
     }
 }

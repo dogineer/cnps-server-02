@@ -1,4 +1,4 @@
-package com.develop.web.video.dto;
+package com.develop.web.ingest.dto;
 
 import com.google.gson.JsonObject;
 import lombok.Data;
