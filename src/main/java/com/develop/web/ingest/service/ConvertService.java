@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 public class ConvertService {
     private final VideoFileUtils videoFileUtils;
     private final VideoMapper videoMapper;
-    private final MediaDataFetcher mediaDataFetcher;
+    private final MediaService mediaService;
 
     public Metadata transcoding(Integer memberId, Integer ingestId, String filePath, String outputPath, FileDto fileDto) throws IOException {
         log.info("[!] 인제스트: '" + ingestId + "'의 변환이 시작되었습니다. \n" + "inputPath : " + filePath + "\noutputPath : " + outputPath);
@@ -78,7 +78,7 @@ public class ConvertService {
                 MyWebSocketClient.sendMessageToUser(memberId, "현재 등록한 인제스트 작업이 완료됐습니다.");
 
                 log.info("[!] 인제스트를 마쳤습니다. 성공 날짜를 등록합니다. => ingestId:" + ingestId);
-                return mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, outputPath, fileDto);
+                return mediaService.getMediaInfo(videoFileUtils.ffprobe, outputPath, fileDto);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -88,7 +88,7 @@ public class ConvertService {
             Metadata convertMetadata;
 
             try {
-                convertMetadata = mediaDataFetcher.getMediaInfo(videoFileUtils.ffprobe, outputPath, fileDto);
+                convertMetadata = mediaService.getMediaInfo(videoFileUtils.ffprobe, outputPath, fileDto);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -12,11 +12,11 @@ import javax.annotation.PostConstruct;
 @Slf4j
 @Component
 public class VideoFileUtils {
-  @Value("${CNPS.FFMPEG}")
+  @Value("${PATH.FFMPEG}")
   public String ffmpegPath;
   public FFmpeg ffmpeg;
 
-  @Value("${CNPS.FFPROBE}")
+  @Value("${PATH.FFPROBE}")
   private String ffprobePath;
   public FFprobe ffprobe;
 
